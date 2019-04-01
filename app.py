@@ -26,7 +26,7 @@ def current_weather_page(city, country):
         city, country = request.form["city"], request.form["country"]
     else:
         pass
-    
+
     location = "{},{}".format(city, country)
     weather_json, msg = current_weather(location)
 

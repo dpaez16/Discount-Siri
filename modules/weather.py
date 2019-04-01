@@ -26,6 +26,11 @@ def get_clothing_recs(report):
     else:
         report["recommend"] = "Its hot out there! Stay hydrated!"
 
+    if report["rain"]:
+        report["recommend"] += " Bring an umbrella!"
+    if report["snow"]:
+        report["recommend"] = "Bundle up for the snow!"
+
     return
 
 
