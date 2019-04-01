@@ -26,7 +26,7 @@ def current_weather_page(city, country):
 
     if weather_json is not None:
         transformed_json = transform_current_weather(weather_json)
-        return jsonify(transformed_json)
+        return render_template('weather/current.html', current_weather=transformed_json)
     else:
         return render_template('error.html', msg=msg)
 

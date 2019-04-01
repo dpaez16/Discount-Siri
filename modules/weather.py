@@ -7,6 +7,28 @@ WEATHER_URL = "https://community-open-weather-map.p.rapidapi.com/"
 LOCATION_URL = "https://ipinfo.io"
 
 
+def get_clothing_recs(report):
+    """
+    Adds a clothing recommendation to a weather report.
+
+    :param report: Weather report to be inspected.
+    """
+
+    current_temp = report["current_temp"]
+    if current_temp <= 35:
+        report["recommend"] = "Bundle up, it's cold!"
+    elif current_temp <= 50:
+        report["recommend"] = "Sweater/light jacket will do."
+    elif current_temp <= 60:
+        report["recommend"] = "Shirt and/or sweater will do."
+    elif current_temp <= 70:
+        report["recommend"] = "Shirt & shorts will do."
+    else:
+        report["recommend"] = "Its hot out there! Stay hydrated!"
+
+    return
+
+
 def get_current_location():
     """
     Grabs the current location of the user.
@@ -150,4 +172,9 @@ def process_report(raw_report):
         "humidity": round(raw_report["main"]["humidity"]),
         "wind_speed": raw_report["wind"]["speed"]
     }
+
+    transformed_report["rain"] = "rain" in transformed_report["summary"].lower()
+    transformed_report["snow"] = "snow" in transformed_report["summary"].lower()
+    get_clothing_recs(transformed_report)
+
     return transformed_report

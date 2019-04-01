@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>Current Weather</h1>
+	<p></p>
+    <a>
+        <font size="10">{{ current_weather.current_temp }}°F</font>
+    </a>
+    <br>
+    <a>{{ current_weather.name }}, {{ current_weather.country }}</a><br>
+    <a>{{ current_weather.summary }}</a><br>
+    <br>
+    <a>Low: {{ current_weather.min_temp }}°F</a><br>
+    <a>High: {{ current_weather.max_temp }}°F</a><br>
+    <a>Humidity: {{ current_weather.humidity }}%</a><br>
+    <a>Wind Speed: {{ current_weather.wind_speed }} mph</a><br>
+    <p></p>
+    <p>
+        {{ current_weather.description }} {{ current_weather.recommend }}
+    </p>
+	<!--form action="" method="POST">
+		<div class="form-group">
+			<label>NetID</label>
+			<input type="text" name="netid" class="form-control" value={{request.form.netid}}>
+		</div>
+		<div class="form-group">
+			<label>Password</label>
+			<input type="password" name="password" class="form-control" value={{request.form.password}}>
+			<a href="/forgot">Forgot Password?</a>
+		</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+	</form-->
+{% endblock %}
