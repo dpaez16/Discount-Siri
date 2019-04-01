@@ -4,6 +4,24 @@ from datetime import datetime
 
 WEATHER_API_KEY = '3f9eb0e727msh27f25e5c8b2bb69p113264jsna72367b8cebb'
 WEATHER_URL = "https://community-open-weather-map.p.rapidapi.com/"
+LOCATION_URL = "https://ipinfo.io"
+
+
+def get_current_location():
+    """
+    Grabs the current location of the user.
+
+    :return: Current city, country, and a possible error message.
+    """
+
+    response = requests.get(LOCATION_URL)
+    if response.status_code != 200:
+        return None, None, "Could not get current location!"
+    else:
+        raw_json = json.loads(response.content.decode('utf-8'))
+        city = raw_json['city']
+        country = raw_json['country']
+        return city, country, ""
 
 
 def current_weather(loc):
@@ -53,6 +71,7 @@ def transform_current_weather(weather_json):
     :param weather_json: Raw JSON to be parsed through.
     :return: Transformed current weather dict.
     """
+
     transformed_weather = process_report(weather_json)
 
     transformed_weather["name"] = weather_json["name"]
@@ -63,10 +82,10 @@ def transform_current_weather(weather_json):
 
 def transform_timestamp(raw_timestamp):
     """
-    Transforms a raw timestamp from a
+    Transforms the raw current weather data into a reliable dictionary.
 
-    :param raw_timestamp:
-    :return:
+    :param weather_json: Raw JSON to be parsed through.
+    :return: Transformed current weather dict.
     """
     raw_date = datetime.strptime(raw_timestamp, "%Y-%m-%d %H:%M:%S")
     date = raw_date.strftime("%m/%d")
@@ -78,6 +97,13 @@ def transform_timestamp(raw_timestamp):
 
 
 def transform_forecast_weather(weather_json):
+    """
+    Transforms the raw forecast weather data into a reliable dictionary.
+
+    :param weather_json: Raw JSON to be parsed through.
+    :return: Transformed forecast weather dict.
+    """
+
     transformed_weather = {
         "name": weather_json["city"]["name"],
         "country": weather_json["city"]["country"]
@@ -105,6 +131,13 @@ def transform_forecast_weather(weather_json):
 
 
 def process_report(raw_report):
+    """
+    Transforms the raw weather report data into a reliable dictionary.
+
+    :param raw_report: Raw JSON to be parsed through.
+    :return: Transformed weather report dict.
+    """
+
     words = raw_report["weather"][0]["description"].split()
     words[0] = words[0].capitalize()
     description = " ".join(words) + "."
