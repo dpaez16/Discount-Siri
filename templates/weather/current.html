@@ -27,19 +27,26 @@
         </div>
 	</form>
 	<p></p>
-    <a>
-        <font size="10">{{ current_weather.current_temp }}°F</font>
-    </a>
-    <br>
-    <a>{{ current_weather.name }}, {{ current_weather.country }}</a><br>
-    <a>{{ current_weather.summary }}</a><br>
-    <br>
-    <a>Low: {{ current_weather.min_temp }}°F</a><br>
-    <a>High: {{ current_weather.max_temp }}°F</a><br>
-    <a>Humidity: {{ current_weather.humidity }}%</a><br>
-    <a>Wind Speed: {{ current_weather.wind_speed }} mph</a><br>
-    <p></p>
-    <p>
-        {{ current_weather.description }} {{ current_weather.recommend }}
-    </p>
+    <div class="row">
+        <div class="col view" style="background-image: url({{ skyline }}); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+        </div>
+        <div class="col">
+            <a>
+                <font size="10">{{ current_weather.current_temp }}°F</font>
+            </a>
+            <br>
+            <a>{{ current_weather.name }}, {{ current_weather.country }}</a><br>
+            <a>{{ current_weather.summary }}</a><br>
+            <br>
+            <a>Low: {{ current_weather.min_temp }}°F</a><br>
+            <a>High: {{ current_weather.max_temp }}°F</a><br>
+            <a>Humidity: {{ current_weather.humidity }}%</a><br>
+            <a>Wind Speed: {{ current_weather.wind_speed }} mph</a><br>
+            <p></p>
+            <p>
+                {{ current_weather.description }} {{ current_weather.recommend }}
+            </p>
+        </div>
+    </div>
 {% endblock %}
+</div>

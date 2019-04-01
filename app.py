@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, render_template, redirect, url_for
 from modules.weather import current_weather, transform_current_weather, \
     five_day_weather, transform_forecast_weather, aggregate_forecast, get_current_location
+from modules.skyline import get_skyline_link
 
 app = Flask(__name__)
 
@@ -32,7 +33,10 @@ def current_weather_page(city, country):
 
     if weather_json is not None:
         transformed_json = transform_current_weather(weather_json)
-        return render_template('weather/current.html', current_weather=transformed_json)
+        skyline_link = get_skyline_link(city)
+        return render_template('weather/current.html',
+                               current_weather=transformed_json,
+                               skyline=skyline_link)
     else:
         return render_template('error.html', msg=msg)
 
@@ -60,8 +64,10 @@ def forecast_weather_page(city, country):
     if weather_json is not None:
         transformed_weather = transform_forecast_weather(weather_json)
         aggregate_forecast(transformed_weather)
-        print(transformed_weather)
-        return render_template('weather/forecast.html', forecast=transformed_weather)
+        skyline_link = get_skyline_link(city)
+        return render_template('weather/forecast.html',
+                               forecast=transformed_weather,
+                               skyline=skyline_link)
     else:
         return render_template('error.html', msg=msg)
 
