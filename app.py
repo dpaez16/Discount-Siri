@@ -19,8 +19,14 @@ def pre_current_weather_page():
         return render_template('error.html', msg=msg)
 
 
-@app.route("/current_weather/city=<string:city>,country=<string:country>")
+@app.route("/current_weather/city=<string:city>,country=<string:country>",
+           methods=['GET', 'POST'])
 def current_weather_page(city, country):
+    if request.method == "POST":
+        city, country = request.form["city"], request.form["country"]
+    else:
+        pass
+    
     location = "{},{}".format(city, country)
     weather_json, msg = current_weather(location)
 

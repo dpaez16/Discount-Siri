@@ -3,6 +3,29 @@
 {% block body %}
 	<p></p>
 	<h1>Current Weather</h1>
+    <form action="" method="POST">
+        <div class="row">
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">City</span>
+                    </div>
+                    <input type="text" class="form-control" name="city" placeholder={{ current_weather.name }}>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Country</span>
+                    </div>
+                    <input type="text" class="form-control" name="country" placeholder={{ current_weather.country }}>
+                </div>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Change Location</button>
+            </div>
+        </div>
+	</form>
 	<p></p>
     <a>
         <font size="10">{{ current_weather.current_temp }}°F</font>
@@ -19,16 +42,4 @@
     <p>
         {{ current_weather.description }} {{ current_weather.recommend }}
     </p>
-	<!--form action="" method="POST">
-		<div class="form-group">
-			<label>NetID</label>
-			<input type="text" name="netid" class="form-control" value={{request.form.netid}}>
-		</div>
-		<div class="form-group">
-			<label>Password</label>
-			<input type="password" name="password" class="form-control" value={{request.form.password}}>
-			<a href="/forgot">Forgot Password?</a>
-		</div>
-			<button type="submit" class="btn btn-primary">Submit</button>
-	</form-->
 {% endblock %}
