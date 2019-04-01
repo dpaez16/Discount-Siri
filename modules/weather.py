@@ -147,9 +147,9 @@ def transform_forecast_weather(weather_json):
 
         transformed_report = process_report(raw_report)
 
-        transformed_weather["date"] = date
-        transformed_weather["weekday"] = weekday
-        transformed_weather["time"] = time
+        transformed_report["date"] = date
+        transformed_report["weekday"] = weekday
+        transformed_report["time"] = time
 
         transformed_reports.append(transformed_report)
 
@@ -183,3 +183,56 @@ def process_report(raw_report):
     get_clothing_recs(transformed_report)
 
     return transformed_report
+
+
+def aggregate_forecast(transformed_weather):
+    """
+    Takes the forecast reports and aggregates them together.
+
+    :param transformed_weather: Transformed forecast dict to be aggregated.
+    """
+
+    aggregated_reports = {}
+    for report in transformed_weather["reports"]:
+        date, weekday = report["date"], report["weekday"]
+        rain, snow = report["rain"], report["snow"]
+
+        if date not in aggregated_reports:
+            aggregated_reports[date] = {}
+        if "min_temp" not in aggregated_reports[date]:
+            aggregated_reports[date]["min_temp"] = []
+        if "max_temp" not in aggregated_reports[date]:
+            aggregated_reports[date]["max_temp"] = []
+        if "rain" not in aggregated_reports[date]:
+            aggregated_reports[date]["rain"] = []
+        if "snow" not in aggregated_reports[date]:
+            aggregated_reports[date]["snow"] = []
+
+        aggregated_reports[date]["weekday"] = weekday
+
+        aggregated_reports[date]["min_temp"].append(report["min_temp"])
+        aggregated_reports[date]["max_temp"].append(report["max_temp"])
+        aggregated_reports[date]["rain"].append(report["rain"])
+        aggregated_reports[date]["snow"].append(report["snow"])
+
+    transformed_weather["reports"] = []
+    for date, values in aggregated_reports.items():
+        min_temp = min(values["min_temp"])
+        max_temp = max(values["max_temp"])
+        rain, snow = True in values["rain"], True in values["snow"]
+        current_temp = int(0.5*(min_temp + max_temp))
+        report = {
+            "date": date,
+            "weekday": values["weekday"],
+            "min_temp": min_temp,
+            "max_temp": max_temp,
+            "current_temp": current_temp,
+            "rain": rain,
+            "snow": snow
+        }
+        get_clothing_recs(report)
+        transformed_weather["reports"].append(report)
+    if len(transformed_weather["reports"]) > 5:
+        transformed_weather["reports"] = transformed_weather["reports"][:5]
+
+    return

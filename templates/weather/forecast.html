@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>Five Day Forecast</h1>
+    <form action="" method="POST">
+        <div class="row">
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">City</span>
+                    </div>
+                    <input type="text" class="form-control" name="city" value={{ forecast.name }}>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Country</span>
+                    </div>
+                    <input type="text" class="form-control" name="country" value={{ forecast.country }}>
+                </div>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Change Location</button>
+            </div>
+        </div>
+	</form>
+	<p></p>
+    <table class="table">
+        <thead class="table-active">
+            <tr>
+                <th style="border: 1px solid black; height:0px">Day</th>
+                <th style="border: 1px solid black; height:0px">Min. Temp</th>
+                <th style="border: 1px solid black; height:0px">Max. Temp</th>
+                <th style="border: 1px solid black; height:0px">Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for report in forecast.reports %}
+            <tr>
+                <td style="height:0px">{{ report.weekday }}, {{ report.date }}</td>
+                <td style="height:0px">{{ report.min_temp }}°F</td>
+                <td style="height:0px">{{ report.max_temp }}°F</td>
+                <td style="height:0px">{{ report.recommend }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

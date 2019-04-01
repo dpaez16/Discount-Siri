@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, render_template, redirect, url_for
 from modules.weather import current_weather, transform_current_weather, \
-    five_day_weather, transform_forecast_weather, get_current_location
+    five_day_weather, transform_forecast_weather, aggregate_forecast, get_current_location
 
 app = Flask(__name__)
 
@@ -46,14 +46,22 @@ def pre_forecast_weather_page():
         return render_template('error.html', msg=msg)
 
 
-@app.route("/forecast_weather/city=<string:city>,country=<string:country>")
+@app.route("/forecast_weather/city=<string:city>,country=<string:country>",
+           methods=['GET', 'POST'])
 def forecast_weather_page(city, country):
+    if request.method == 'POST':
+        city, country = request.form['city'], request.form['country']
+    else:
+        pass
+
     location = "{},{}".format(city, country)
     weather_json, msg = five_day_weather(location)
 
     if weather_json is not None:
         transformed_weather = transform_forecast_weather(weather_json)
-        return jsonify(transformed_weather)
+        aggregate_forecast(transformed_weather)
+        print(transformed_weather)
+        return render_template('weather/forecast.html', forecast=transformed_weather)
     else:
         return render_template('error.html', msg=msg)
 
