@@ -28,8 +28,10 @@
 	</form>
 	<p></p>
     <div class="row">
+        {% if skyline %}
         <div class="col view" style="background-image: url({{ skyline }}); background-repeat: no-repeat; background-size: cover; background-position: center center;">
         </div>
+        {% endif %}
         <div class="col">
             <a>
                 <font size="10">{{ current_weather.current_temp }}°F</font>
