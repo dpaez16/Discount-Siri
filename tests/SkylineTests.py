@@ -19,13 +19,13 @@ class SkylineTests(unittest.TestCase):
 
     def test_good_location(self):
         """
-        Tests to see if the skyline function catches bad locations properly.
+        Tests to see if the skyline function catches good locations properly.
         """
 
         skyline_link = get_skyline_link("Chicago", "US")
         self.assertNotEqual(skyline_link, "")
 
-        skyline_link = get_skyline_link("Champaign", "US")
+        skyline_link = get_skyline_link("Madrid", "ES")
         self.assertNotEqual(skyline_link, "")
 
         skyline_link = get_skyline_link("asdf", "US")
