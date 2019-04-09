@@ -4,6 +4,7 @@ from modules.weather import current_weather, transform_current_weather, \
 from modules.skyline import get_skyline_link
 from modules.definition import get_definition
 from modules.random_fact import get_random_fact
+from modules.random_shower_thought import get_random_shower_thought
 
 app = Flask(__name__)
 
@@ -94,6 +95,12 @@ def definition_page():
 def random_fact_page():
     random_fact = get_random_fact()
     return render_template('serious/random_fact.html', fact=random_fact)
+
+
+@app.route("/random_shower_thought")
+def random_shower_thought_page():
+    random_shower_thought = get_random_shower_thought()
+    return render_template('serious/random_shower_thought.html', shower_thought=random_shower_thought)
 
 
 if __name__ == "__main__":
