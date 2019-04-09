@@ -5,6 +5,7 @@ from modules.skyline import get_skyline_link
 from modules.definition import get_definition
 from modules.random_fact import get_random_fact
 from modules.random_shower_thought import get_random_shower_thought
+from modules.front_page_preview import get_front_page_preview
 
 app = Flask(__name__)
 
@@ -100,7 +101,16 @@ def random_fact_page():
 @app.route("/random_shower_thought")
 def random_shower_thought_page():
     random_shower_thought = get_random_shower_thought()
-    return render_template('serious/random_shower_thought.html', shower_thought=random_shower_thought)
+    return render_template('serious/random_shower_thought.html',
+                           shower_thought=random_shower_thought)
+
+
+@app.route("/front_page_reddit")
+def front_page_reddit_preview():
+    front_page_preview = get_front_page_preview()
+    print(front_page_preview)
+    return render_template('serious/front_page_preview.html',
+                           front_page=front_page_preview)
 
 
 if __name__ == "__main__":

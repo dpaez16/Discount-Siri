@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>Preview of the Front Page of Reddit</h1>
+    <br>
+    {% for post in front_page %}
+        <div class="row">
+            {% if post.preview_url %}
+            <div class="col view" style="background-image: url({{ post.preview_url }}); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+            </div>
+            {% endif %}
+            <div class="col">
+                <a>{{ post.subreddit }}</a><br>
+                <a href={{ post.post_link }}>{{ post.title }}</a><br>
+                <a>{{ post.upvotes }}</a><br>
+            </div>
+        </div>
+        <br>
+    {% endfor %}
+{% endblock %}
+</div>

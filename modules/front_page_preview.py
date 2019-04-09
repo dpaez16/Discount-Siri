@@ -1,5 +1,4 @@
 import praw
-from random import shuffle
 
 
 CLIENT_ID = "i-2D8j2hde0q1A"
