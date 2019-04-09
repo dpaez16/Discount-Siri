@@ -3,6 +3,7 @@ from modules.weather import current_weather, transform_current_weather, \
     five_day_weather, transform_forecast_weather, aggregate_forecast, get_current_location
 from modules.skyline import get_skyline_link
 from modules.definition import get_definition
+from modules.random_fact import get_random_fact
 
 app = Flask(__name__)
 
@@ -87,6 +88,12 @@ def definition_page():
     else:
         print(definition)
         return render_template('serious/definition.html', word=word, definitions=definition)
+
+
+@app.route("/random_fact")
+def random_fact_page():
+    random_fact = get_random_fact()
+    return render_template('serious/random_fact.html', fact=random_fact)
 
 
 if __name__ == "__main__":
