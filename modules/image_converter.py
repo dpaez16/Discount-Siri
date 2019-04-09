@@ -3,7 +3,7 @@ from PIL import Image
 
 def convert_image_file(file, output_format):
     """
-    Converts an image file to a differt format.
+    Converts an image file to a different format.
 
     :param file: File to be converted.
     :param output_format: Output format the file will be converted to.
@@ -19,7 +19,7 @@ def convert_image_file(file, output_format):
     if file_name == file:
         return None, "Could not convert {} to {}!".format(file, output_format)
 
-    new_file_name = "{}.{}".format(file_name, output_format)
+    new_file_name = "{}_converted.{}".format(file_name, output_format)
 
     image_file.save(new_file_name)
 

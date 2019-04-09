@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>Image Converter</h1>
+    <br>
+    <p>Upload an image to start the conversion process.</p>
+    <br>
+	<form method = "POST" enctype = "multipart/form-data">
+		<input type="file" name="file"/>
+		<br>
+        <br>
+        <span>
+            <a>Output Format: &nbsp;</a>
+            <select name="image_format">
+                <option value="png">PNG</option>
+                <option value="jpeg">JPEG</option>
+                <option value="bmp">BMP</option>
+                <option value="gif">GIF</option>
+            </select>
+        </span>
+        <br>
+		<br>
+		<input type="submit" value="Convert!"/>
+	</form>
+{% endblock %}
+</div>

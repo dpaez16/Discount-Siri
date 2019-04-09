@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>Audio Converter</h1>
+    <br>
+    <p>Upload an audio file to start the conversion process.</p>
+    <br>
+	<form method = "POST" enctype = "multipart/form-data">
+		<input type="file" name="file"/>
+		<br>
+        <br>
+        <span>
+            <a>Output Format: &nbsp;</a>
+            <select name="audio_format">
+                <option value="ogg">OGG</option>
+                <option value="wav">WAV</option>
+                <option value="mp3">MP3</option>
+                <option value="m4a">M4A</option>
+                <option value="flac">FLAC</option>
+            </select>
+        </span>
+        <br>
+		<br>
+		<input type="submit" value="Convert!"/>
+	</form>
+{% endblock %}
+</div>

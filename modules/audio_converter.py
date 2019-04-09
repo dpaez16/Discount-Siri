@@ -19,7 +19,7 @@ def convert_audio_file(file, output_format):
     if file_name == file:
         return None, "Could not convert {} to {}!".format(file, output_format)
 
-    new_file_name = "{}.{}".format(file_name, output_format)
+    new_file_name = "{}_converted.{}".format(file_name, output_format)
 
     audio_file.export(new_file_name, output_format)
 

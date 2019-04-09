@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, redirect, url_for
+import os
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory
 from modules.weather import current_weather, transform_current_weather, \
     five_day_weather, transform_forecast_weather, aggregate_forecast, get_current_location
 from modules.skyline import get_skyline_link
@@ -6,8 +7,35 @@ from modules.definition import get_definition
 from modules.random_fact import get_random_fact
 from modules.random_shower_thought import get_random_shower_thought
 from modules.front_page_preview import get_front_page_preview
+from modules.image_converter import convert_image_file
+from modules.audio_converter import convert_audio_file
+
+UPLOAD_FOLDER = os.getcwd()
+PREVIOUS_FILE = None
+ALLOWED_EXTENSIONS = {
+    'IMAGES': set(['png', 'jpeg', 'jpg', 'bmp', 'gif']),
+    'AUDIO': set(['ogg', 'wav', 'mp3', 'm4a', 'flac'])
+}
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+def try_remove_previous_file():
+    global PREVIOUS_FILE
+    if PREVIOUS_FILE is not None:
+        os.remove(PREVIOUS_FILE)
+    return
+
+
+def allowed_image_file(file):
+    return '.' in file \
+            and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS['IMAGES']
+
+
+def allowed_audio_file(file):
+    return '.' in file \
+            and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS['AUDIO']
 
 
 @app.route("/")
@@ -111,6 +139,58 @@ def front_page_reddit_preview():
     print(front_page_preview)
     return render_template('serious/front_page_preview.html',
                            front_page=front_page_preview)
+
+
+@app.route('/image_converter', methods=['GET', 'POST'])
+def image_converter_page():
+    global PREVIOUS_FILE
+    try_remove_previous_file()
+    if request.method == "POST":
+        if request.files:
+            file = request.files['file']
+            if file and allowed_image_file(file.filename):
+                file.save(file.filename)
+                output_format = request.form['image_format']
+                converted_file, msg = convert_image_file(file.filename, output_format)
+                if converted_file is None:
+                    return render_template('error.html', msg=msg)
+                os.remove(file.filename)
+                PREVIOUS_FILE = converted_file
+                return send_from_directory(UPLOAD_FOLDER, converted_file, as_attachment=True)
+            else:
+                msg = "File is not an image!"
+                return render_template('error.html', msg=msg)
+        else:
+            msg = "You did not upload a file at all!"
+            return render_template('error.html', msg=msg)
+    else:
+        return render_template('serious/image_converter.html')
+
+
+@app.route('/audio_converter', methods=['GET', 'POST'])
+def audio_converter_page():
+    global PREVIOUS_FILE
+    try_remove_previous_file()
+    if request.method == "POST":
+        if request.files:
+            file = request.files['file']
+            if file and allowed_audio_file(file.filename):
+                file.save(file.filename)
+                output_format = request.form['audio_format']
+                converted_file, msg = convert_audio_file(file.filename, output_format)
+                if converted_file is None:
+                    return render_template('error.html', msg=msg)
+                os.remove(file.filename)
+                PREVIOUS_FILE = converted_file
+                return send_from_directory(UPLOAD_FOLDER, converted_file, as_attachment=True)
+            else:
+                msg = "File is not an audio file!"
+                return render_template('error.html', msg=msg)
+        else:
+            msg = "You did not upload a file at all!"
+            return render_template('error.html', msg=msg)
+    else:
+        return render_template('serious/audio_converter.html')
 
 
 if __name__ == "__main__":
