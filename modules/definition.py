@@ -6,17 +6,6 @@ OXFORD_APP_ID = "bf9c0e59"
 OXFORD_URL = "https://od-api.oxforddictionaries.com/api/v1"
 
 
-def process_word(word):
-    """
-    Pre-processes a word before requesting its defnition.
-
-    :param word: Word to be pre-processed.
-    :return: Processed word.
-    """
-
-    return word
-
-
 def clean_entries(entries):
     """
     Cleans out excessive metadata for a Oxford entry.
@@ -29,21 +18,24 @@ def clean_entries(entries):
 
     for entry in entries:
         raw_senses = entry['senses']
-        definitions = list(map(lambda s: s['definitions'][0], raw_senses))
-        raw_examples = list(map(lambda s: s['examples'], raw_senses))
-        
+        filtered_senses_definitions = list(filter(lambda s: 'definitions' in s, raw_senses))
+        definitions = list(map(lambda s: s['definitions'][0], filtered_senses_definitions))
+        filtered_senses_examples = list(filter(lambda s: 'examples' in s, raw_senses))
+        raw_examples = list(map(lambda s: s['examples'], filtered_senses_examples))
+
         examples = []
         for raw_example in raw_examples:
             processed_raw_examples = list(map(lambda e: e['text'], raw_example))
             for processed_raw_example in processed_raw_examples:
                 examples.append(processed_raw_example)
 
-        new_entry = {
-            'definitions': definitions,
-            'examples': examples
-        }
+        if len(definitions) != 0 and len(examples) != 0:
+            new_entry = {
+                'definitions': definitions,
+                'examples': examples
+            }
 
-        new_entries.append(new_entry)
+            new_entries.append(new_entry)
 
     return new_entries
 
@@ -76,8 +68,6 @@ def get_definition(word):
     :return: complete definition of word, if possible.
     """
 
-    processed_word = process_word(word)
-
     headers = {
         'app_id': OXFORD_APP_ID,
         'app_key': OXFORD_API_KEY
@@ -85,18 +75,19 @@ def get_definition(word):
 
     params = {
         'source_lang': 'en',
-        'word_id': processed_word
+        'word_id': word
     }
 
-    response = requests.get("{}/entries/{}/{}".format(OXFORD_URL, params['source_lang'], params['word_id']), 
-        headers=headers)
+    response = requests.get("{}/entries/{}/{}".format(OXFORD_URL, params['source_lang'], params['word_id']),
+                            headers=headers)
 
     if response.status_code != 200:
-        return None, "Could not find definition of {}!".format(word)
+        return None, "Could not find the definition of {}!".format(word)
 
     search_json = json.loads(response.content.decode('utf-8'))
 
     raw_definitions = search_json['results'][0]['lexicalEntries']
     definitions = list(map(lambda x: process_raw_definition(x), raw_definitions))
+    definitions = list(filter(lambda d: len(d['entries']) != 0, definitions))
 
-    return definitions
+    return definitions, None

@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for
 from modules.weather import current_weather, transform_current_weather, \
     five_day_weather, transform_forecast_weather, aggregate_forecast, get_current_location
 from modules.skyline import get_skyline_link
+from modules.definition import get_definition
 
 app = Flask(__name__)
 
@@ -70,6 +71,22 @@ def forecast_weather_page(city, country):
                                skyline=skyline_link)
     else:
         return render_template('error.html', msg=msg)
+
+
+@app.route("/definition", methods=["GET", "POST"])
+def definition_page():
+    word = None
+    if request.method == "POST":
+        word = request.form['word']
+
+    definition, msg = None, None
+    if word is not None:
+        definition, msg = get_definition(word)
+    if definition is None and word is not None:
+        return render_template('error.html', msg=msg)
+    else:
+        print(definition)
+        return render_template('serious/definition.html', word=word, definitions=definition)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>Definition</h1>
+    <br>
+    <form method="POST">
+        <div class="input-group md-form form-sm form-1 pl-0">
+            <div class="input-group-prepend">
+                <span class="input-group-text purple lighten-3" id="basic-text1">
+                    <i class="fa fa-search"></i>
+                </span>
+            </div>
+            <input name="word" class="form-control my-0 py-1" type="text" placeholder="Search" aria-label="Search">
+        </div>
+	</form>
+    <br>
+    {% if definitions %}
+        <a>
+            <font size="7">{{ word }}</font>
+        </a>
+        <hr>
+        {% for full_definition in definitions %}
+            <i>{{ full_definition.category }}</i>
+            <ol>
+                {% for entry in full_definition.entries %}
+                    {% for definition in entry.definitions %}
+                        <li>{{ definition }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ol>
+            <a>Examples</a>
+            <ul>
+                {% for entry in full_definition.entries %}
+                    {% for example in entry.examples %}
+                        <li>"{{ example }}"</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            <br>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+</div>
