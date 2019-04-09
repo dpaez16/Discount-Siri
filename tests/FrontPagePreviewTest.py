@@ -21,6 +21,9 @@ class RandomFactTests(unittest.TestCase):
             self.assertTrue('preview_url' in post)
             self.assertTrue('post_link' in post)
             self.assertTrue('upvotes' in post)
+
+            self.assertTrue("r/" in post['subreddit'])
+            self.assertTrue("https://www.reddit.com" in post['post_link'])
         return
 
 
