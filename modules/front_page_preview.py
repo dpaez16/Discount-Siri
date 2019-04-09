@@ -6,6 +6,20 @@ CLIENT_SECRET = "sX6N6vk8Kl8lsazPvA_eqZM5vA8"
 USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:65.0) Gecko/20100101 Firefox/65.0"
 
 
+def process_upvotes(upvotes):
+    upvotes_str = str(upvotes)
+    if len(upvotes_str) <= 3:
+        return upvotes_str
+    else:
+        new_upvotes = ""
+        upvotes_str = upvotes_str[::-1]
+        for idx in range(len(upvotes_str)):
+            new_upvotes += upvotes_str[idx]
+            if (idx + 1) % 3 == 0:
+                new_upvotes += ','
+        return new_upvotes[::-1]
+
+
 def url_filter(url):
     url_lower = url.lower()
     if ".jpg" in url_lower:
@@ -37,8 +51,8 @@ def get_front_page_preview():
             'subreddit': "r/{}".format(post.subreddit),
             'title': post.title,
             'preview_url': url_filter(post.url),
-            'post_link': "reddit.com" + post.permalink,
-            'upvotes': post.ups
+            'post_link': "https://www.reddit.com" + post.permalink,
+            'upvotes': process_upvotes(post.ups)
         }
 
         front_page_preview.append(processed_post)
