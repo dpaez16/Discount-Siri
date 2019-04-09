@@ -11,7 +11,6 @@ from modules.image_converter import convert_image_file
 from modules.audio_converter import convert_audio_file
 
 UPLOAD_FOLDER = os.getcwd()
-PREVIOUS_FILE = None
 ALLOWED_EXTENSIONS = {
     'IMAGES': set(['png', 'jpeg', 'jpg', 'bmp', 'gif']),
     'AUDIO': set(['ogg', 'wav', 'mp3', 'm4a', 'flac'])
@@ -19,13 +18,6 @@ ALLOWED_EXTENSIONS = {
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
-def try_remove_previous_file():
-    global PREVIOUS_FILE
-    if PREVIOUS_FILE is not None:
-        os.remove(PREVIOUS_FILE)
-    return
 
 
 def allowed_image_file(file):
@@ -143,8 +135,6 @@ def front_page_reddit_preview():
 
 @app.route('/image_converter', methods=['GET', 'POST'])
 def image_converter_page():
-    global PREVIOUS_FILE
-    try_remove_previous_file()
     if request.method == "POST":
         if request.files:
             file = request.files['file']
@@ -154,9 +144,10 @@ def image_converter_page():
                 converted_file, msg = convert_image_file(file.filename, output_format)
                 if converted_file is None:
                     return render_template('error.html', msg=msg)
+                sent_file = send_from_directory(UPLOAD_FOLDER, converted_file, as_attachment=True)
                 os.remove(file.filename)
-                PREVIOUS_FILE = converted_file
-                return send_from_directory(UPLOAD_FOLDER, converted_file, as_attachment=True)
+                os.remove(converted_file)
+                return sent_file
             else:
                 msg = "File is not an image!"
                 return render_template('error.html', msg=msg)
@@ -169,8 +160,6 @@ def image_converter_page():
 
 @app.route('/audio_converter', methods=['GET', 'POST'])
 def audio_converter_page():
-    global PREVIOUS_FILE
-    try_remove_previous_file()
     if request.method == "POST":
         if request.files:
             file = request.files['file']
@@ -180,9 +169,10 @@ def audio_converter_page():
                 converted_file, msg = convert_audio_file(file.filename, output_format)
                 if converted_file is None:
                     return render_template('error.html', msg=msg)
+                sent_file = send_from_directory(UPLOAD_FOLDER, converted_file, as_attachment=True)
                 os.remove(file.filename)
-                PREVIOUS_FILE = converted_file
-                return send_from_directory(UPLOAD_FOLDER, converted_file, as_attachment=True)
+                os.remove(converted_file)
+                return sent_file
             else:
                 msg = "File is not an audio file!"
                 return render_template('error.html', msg=msg)
