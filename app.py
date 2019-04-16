@@ -11,6 +11,7 @@ from modules.image_converter import convert_image_file
 from modules.audio_converter import convert_audio_file
 from modules.trash_meme import gen_trash_meme
 from modules.facts_meme import gen_facts_meme
+from modules.random_meme import get_random_meme
 
 UPLOAD_FOLDER = os.getcwd()
 ALLOWED_EXTENSIONS = {
@@ -221,6 +222,12 @@ def facts_meme_page():
         return sent_file
     else:
         return render_template("memes/facts_meme.html")
+
+
+@app.route("/random_meme")
+def random_meme_page():
+    random_memes, msg = get_random_meme()
+    return render_template('memes/random_meme.html', memes=random_memes)
 
 
 if __name__ == "__main__":
