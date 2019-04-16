@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>"Trash Vision" Meme Generator</h1>
+	<p>
+        This works best if your image is square.
+        Your image will be made square otherwise.
+    </p>
+    <img
+        src="./static/trash_template.jpg"
+        style="width: 25%; height: 25%"
+    >
+    <br>
+    <br>
+    <form method = "POST" enctype = "multipart/form-data">
+        <input type="file" name="file"/>
+        <br>
+        <br>
+        <input type="submit" value="Generate Meme!"/>
+    </form>
+{% endblock %}
+</div>

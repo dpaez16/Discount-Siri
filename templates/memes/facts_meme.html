@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>"Facts" Meme Generator</h1>
+	<p></p>
+    <img
+        src="./static/facts_template.jpg"
+        style="width: 25%; height: 25%"
+    >
+    <br>
+    <br>
+    <form method = "POST">
+        <div class="form-group">
+            <label for="text_input">Text Input:</label>
+            <textarea
+                    class="form-control"
+                    rows="3"
+                    name="text_input"
+                    id="text_input"></textarea>
+        </div>
+        <br>
+        <br>
+        <input type="submit" value="Generate Meme!"/>
+        <br>
+        <br>
+        <br>
+    </form>
+{% endblock %}
+</div>

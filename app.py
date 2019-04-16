@@ -9,6 +9,8 @@ from modules.random_shower_thought import get_random_shower_thought
 from modules.front_page_preview import get_front_page_preview
 from modules.image_converter import convert_image_file
 from modules.audio_converter import convert_audio_file
+from modules.trash_meme import gen_trash_meme
+from modules.facts_meme import gen_facts_meme
 
 UPLOAD_FOLDER = os.getcwd()
 ALLOWED_EXTENSIONS = {
@@ -181,6 +183,44 @@ def audio_converter_page():
             return render_template('error.html', msg=msg)
     else:
         return render_template('serious/audio_converter.html')
+
+
+@app.route("/trash_vision", methods=['GET', 'POST'])
+def trash_vision():
+    if request.method == "POST":
+        if request.files:
+            file = request.files['file']
+            if file and allowed_image_file(file.filename):
+                file.save(file.filename)
+                trash_meme, msg = gen_trash_meme(file.filename)
+                if trash_meme is None:
+                    return render_template('error.html', msg=msg)
+                sent_file = send_from_directory(UPLOAD_FOLDER, trash_meme, as_attachment=True)
+                os.remove(file.filename)
+                os.remove(trash_meme)
+                return sent_file
+            else:
+                msg = "File is not an image!"
+                return render_template('error.html', msg=msg)
+        else:
+            msg = "You did not upload a file at all!"
+            return render_template('error.html', msg=msg)
+    else:
+        return render_template('memes/trash_vision.html')
+
+
+@app.route("/facts_meme", methods=['GET', 'POST'])
+def facts_meme_page():
+    if request.method == 'POST':
+        text_input = request.form['text_input']
+        facts_meme, msg = gen_facts_meme(text_input)
+        if facts_meme is None:
+            return render_template('error.html', msg=msg)
+        sent_file = send_from_directory(UPLOAD_FOLDER, facts_meme, as_attachment=True)
+        os.remove(facts_meme)
+        return sent_file
+    else:
+        return render_template("memes/facts_meme.html")
 
 
 if __name__ == "__main__":
