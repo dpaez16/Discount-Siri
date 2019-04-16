@@ -12,6 +12,7 @@ from modules.audio_converter import convert_audio_file
 from modules.trash_meme import gen_trash_meme
 from modules.facts_meme import gen_facts_meme
 from modules.random_meme import get_random_meme
+from modules.deep_fry import gen_deep_fry
 
 UPLOAD_FOLDER = os.getcwd()
 ALLOWED_EXTENSIONS = {
@@ -226,8 +227,32 @@ def facts_meme_page():
 
 @app.route("/random_meme")
 def random_meme_page():
-    random_memes, msg = get_random_meme()
-    return render_template('memes/random_meme.html', memes=random_memes)
+    random_meme, msg = get_random_meme()
+    return render_template('memes/random_meme.html', meme=random_meme)
+
+
+@app.route('/deep_fry', methods=['GET', 'POST'])
+def deep_fry_page():
+    if request.method == "POST":
+        if request.files:
+            file = request.files['file']
+            if file and allowed_image_file(file.filename):
+                file.save(file.filename)
+                deep_fried_meme, msg = gen_deep_fry(file.filename)
+                if deep_fried_meme is None:
+                    return render_template('error.html', msg=msg)
+                sent_file = send_from_directory(UPLOAD_FOLDER, deep_fried_meme, as_attachment=True)
+                os.remove(file.filename)
+                os.remove(deep_fried_meme)
+                return sent_file
+            else:
+                msg = "File is not an image!"
+                return render_template('error.html', msg=msg)
+        else:
+            msg = "You did not upload a file at all!"
+            return render_template('error.html', msg=msg)
+    else:
+        return render_template('memes/deep_fry.html')
 
 
 if __name__ == "__main__":

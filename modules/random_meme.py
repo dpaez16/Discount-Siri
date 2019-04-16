@@ -35,4 +35,4 @@ def get_random_meme():
     meme_urls = list(filter(lambda u: url_filter(u), meme_urls))
     shuffle(meme_urls)
 
-    return meme_urls, ""
+    return meme_urls[0], ""

@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>"Deep-Fry" Meme Generator</h1>
+	<p></p>
+    <img
+        src="https://raw.githubusercontent.com/Ovyerus/deeppyer/master/banner.jpg"
+        style="width: 50%; height: 50%"
+    >
+    <br>
+    <br>
+    <form method = "POST" enctype = "multipart/form-data">
+        <input type="file" name="file"/>
+        <br>
+        <br>
+        <input type="submit" value="Generate Meme!"/>
+    </form>
+{% endblock %}
+</div>

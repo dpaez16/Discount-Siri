@@ -4,17 +4,7 @@
 	<p></p>
 	<h1>Random Meme</h1>
     <br>
-    <img id="meme">
-    <script>
-        var idx = -1;
-        function get_meme_url() {
-            idx = (idx + 1) % 50;
-            return {{ memes|safe }}[idx];
-        };
-        document.onload = function() {
-            document.getElementById('meme').src = get_meme_url();
-        };
-    </script>
+    <img src="{{ meme }}">
     <br>
     <br>
 {% endblock %}
