@@ -23,7 +23,7 @@ def url_filter(url):
         return False
 
 
-def get_random_meme():
+def get_random_memes():
     r = praw.Reddit(client_id=CLIENT_ID,
                     client_secret=CLIENT_SECRET,
                     user_agent=USER_AGENT)
@@ -35,4 +35,4 @@ def get_random_meme():
     meme_urls = list(filter(lambda u: url_filter(u), meme_urls))
     shuffle(meme_urls)
 
-    return meme_urls[0], ""
+    return meme_urls, ""

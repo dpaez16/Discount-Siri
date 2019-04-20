@@ -11,7 +11,7 @@ from modules.image_converter import convert_image_file
 from modules.audio_converter import convert_audio_file
 from modules.trash_meme import gen_trash_meme
 from modules.facts_meme import gen_facts_meme
-from modules.random_meme import get_random_meme
+from modules.random_memes import get_random_memes
 from modules.deep_fry import gen_deep_fry
 
 UPLOAD_FOLDER = os.getcwd()
@@ -225,10 +225,10 @@ def facts_meme_page():
         return render_template("memes/facts_meme.html")
 
 
-@app.route("/random_meme")
+@app.route("/random_memes")
 def random_meme_page():
-    random_meme, msg = get_random_meme()
-    return render_template('memes/random_meme.html', meme=random_meme)
+    random_memes, msg = get_random_memes()
+    return render_template('memes/random_meme.html', memes=random_memes)
 
 
 @app.route('/deep_fry', methods=['GET', 'POST'])
