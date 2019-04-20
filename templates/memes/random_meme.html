@@ -11,15 +11,13 @@
     <style>
         .mySlides {display:none;}
     </style>
-    <div class="w3-content w3-display-container">
-        {% for meme in memes %}
-            <img class="mySlides"
-                 src="{{ meme }}"
-                 style="width:100%;
-                 border-width: 5px;
-                 border-style: solid">
-        {% endfor %}
-    </div>
+    {% for meme in memes %}
+        <img class="mySlides"
+             src="{{ meme }}"
+             style="width:40%;
+             border-width: 4px;
+             border-style: solid">
+    {% endfor %}
     <script>
         document.onkeydown = checkKey;
         function checkKey(e) {
