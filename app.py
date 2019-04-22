@@ -14,6 +14,7 @@ from modules.facts_meme import gen_facts_meme
 from modules.random_memes import get_random_memes
 from modules.deep_fry import gen_deep_fry
 from modules.alternating_emoji import gen_alternating_emoji
+from modules.spongebob_mock import gen_spongebob_mock
 
 UPLOAD_FOLDER = os.getcwd()
 ALLOWED_EXTENSIONS = {
@@ -263,6 +264,16 @@ def alternating_text_emoji_page():
         text_input = request.form['text_input']
         generated_meme = gen_alternating_emoji(text_input)
     return render_template('memes/alternating_text_emoji.html',
+                           output=generated_meme)
+
+
+@app.route("/sponge_mock", methods=['GET', 'POST'])
+def spongemock_page():
+    generated_meme = ""
+    if request.method == 'POST':
+        text_input = request.form['user_input']
+        generated_meme = gen_spongebob_mock(text_input)
+    return render_template('memes/spongemock.html',
                            output=generated_meme)
 
 

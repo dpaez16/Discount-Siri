@@ -1,4 +1,5 @@
 def gen_spongebob_mock(s):
+    s = s.strip()
     new_s = ""
     flag = False
     for c in s:

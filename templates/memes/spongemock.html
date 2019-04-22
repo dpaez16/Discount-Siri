@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>"Spongemock" Meme Generator</h1>
+	<p></p>
+    <img
+        src="./static/spongemock.jpg"
+        style="width: 25%; height: 25%"
+    >
+    <br>
+    <br>
+    <form method = "POST">
+        <div class="form-group">
+            <label for="text_input">Text Input:</label>
+            <br>
+            <input type="text" id="text_input" name="user_input">
+        </div>
+        <br>
+        <input type="submit" value="Generate Meme!"/>
+        <br>
+        <br>
+    </form>
+    <p>Output: <a id="output">{{ output }}</a></p>
+    {% if output|length != 0 %}
+    <button type="button"
+            class="btn btn-success"
+            onclick="copyText()">Copy Text</button>
+    {% endif %}
+    <script>
+        function copyText() {
+            var range = document.createRange();
+            var selection = window.getSelection();
+            range.selectNodeContents(document.getElementById('output'));
+
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand("copy");
+        }
+    </script>
+{% endblock %}
+</div>
