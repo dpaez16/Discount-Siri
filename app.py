@@ -13,6 +13,7 @@ from modules.trash_meme import gen_trash_meme
 from modules.facts_meme import gen_facts_meme
 from modules.random_memes import get_random_memes
 from modules.deep_fry import gen_deep_fry
+from modules.alternating_emoji import gen_alternating_emoji
 
 UPLOAD_FOLDER = os.getcwd()
 ALLOWED_EXTENSIONS = {
@@ -253,6 +254,16 @@ def deep_fry_page():
             return render_template('error.html', msg=msg)
     else:
         return render_template('memes/deep_fry.html')
+
+
+@app.route("/alternating_text_emoji", methods=['GET', 'POST'])
+def alternating_text_emoji_page():
+    generated_meme = ""
+    if request.method == 'POST':
+        text_input = request.form['text_input']
+        generated_meme = gen_alternating_emoji(text_input)
+    return render_template('memes/alternating_text_emoji.html',
+                           output=generated_meme)
 
 
 if __name__ == "__main__":
