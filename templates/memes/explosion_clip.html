@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<p></p>
+	<h1>"Explosion Clip" Meme Generator</h1>
+    <p>Upload a video to start the meme process.</p>
+    <img
+        src="./static/explosion_clip.gif"
+        style="width: 25%; height: 25%"
+    >
+    <br>
+    <br>
+    <form method = "POST" enctype = "multipart/form-data">
+        <input type="file" name="file"/>
+        <br>
+        <br>
+        <input type="submit" value="Generate Meme!"/>
+    </form>
+{% endblock %}
+</div>

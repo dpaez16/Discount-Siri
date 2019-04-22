@@ -15,11 +15,13 @@ from modules.random_memes import get_random_memes
 from modules.deep_fry import gen_deep_fry
 from modules.alternating_emoji import gen_alternating_emoji
 from modules.spongebob_mock import gen_spongebob_mock
+from modules.explosion_meme import append_explosion_clip
 
 UPLOAD_FOLDER = os.getcwd()
 ALLOWED_EXTENSIONS = {
     'IMAGES': set(['png', 'jpeg', 'jpg', 'bmp', 'gif']),
-    'AUDIO': set(['ogg', 'wav', 'mp3', 'm4a', 'flac'])
+    'AUDIO': set(['ogg', 'wav', 'mp3', 'm4a', 'flac']),
+    'VIDEO': set(['mp4', 'ogv', 'mpeg', 'avi', 'mov'])
 }
 
 app = Flask(__name__)
@@ -34,6 +36,11 @@ def allowed_image_file(file):
 def allowed_audio_file(file):
     return '.' in file \
             and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS['AUDIO']
+
+
+def allowed_video_file(file):
+    return '.' in file \
+            and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS['VIDEO']
 
 
 @app.route("/")
@@ -275,6 +282,30 @@ def spongemock_page():
         generated_meme = gen_spongebob_mock(text_input)
     return render_template('memes/spongemock.html',
                            output=generated_meme)
+
+
+@app.route('/add_explosion_clip', methods=['GET', 'POST'])
+def explosion_clip_meme_page():
+    if request.method == "POST":
+        if request.files:
+            file = request.files['file']
+            if file and allowed_video_file(file.filename):
+                file.save(file.filename)
+                video, msg = append_explosion_clip(file.filename)
+                if video is None:
+                    return render_template('error.html', msg=msg)
+                sent_file = send_from_directory(UPLOAD_FOLDER, video, as_attachment=True)
+                os.remove(file.filename)
+                os.remove(video)
+                return sent_file
+            else:
+                msg = "File is not a video!"
+                return render_template('error.html', msg=msg)
+        else:
+            msg = "You did not upload a file at all!"
+            return render_template('error.html', msg=msg)
+    else:
+        return render_template('memes/explosion_clip.html')
 
 
 if __name__ == "__main__":
