@@ -35,4 +35,4 @@ def video_search_query(query):
         raw_json = json.loads(response.content.decode('utf-8'))
         results = map(process_result, raw_json['items'])
         results = list(filter(lambda x: x is not None, results))
-        return results
+        return results, ""
