@@ -13,7 +13,7 @@ def process_result(result):
     if 'videoId' not in result['id']:
         return None
     new_result = {
-        'url': "https://youtube.com/watch?v=" + result['id']['videoId'],
+        'url': "https://youtube.com/watch?v=" + result['id']['videoId'] + "?enablejsapi=1&html5=1",
         'title': result['snippet']['title'],
         'thumbnail': result['snippet']['thumbnails']['default']['url']
     }
