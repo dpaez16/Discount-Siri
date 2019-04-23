@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 
+<!-- NOTES
+    style="width: 0; height: 0; border: 0; border: none;"
+-->
+
 {% block body %}
 	<p></p>
 	<h1>YouTube Audio</h1>
@@ -43,6 +47,13 @@
                         <a href="{{ result.url }}">
                             {{ result.title }}
                         </a>
+                    </td>
+                    <td>
+                        <iframe
+                                id="video_{{ idx }}"
+                                src="{{ result.embed_url }}"
+                                style="width: 0; height: 0; border: 0; border: none;">
+                        </iframe>
                     </td>
                 </tr>
             {% endfor %}
