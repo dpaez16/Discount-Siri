@@ -313,24 +313,10 @@ def explosion_clip_meme_page():
 def youtube_audio_page():
     results, msg = None, None
     query = None
-    results_range = None
+    results_range = []
     if request.method == 'POST':
         query = request.form['query']
         results, msg = video_search_query(query)
-        results = [
-            {
-                'url': "https://youtube.com/watch?v=v1SpVYmcTGM",
-                'embed_url': "https://www.youtube.com/embed/v1SpVYmcTGM?enablejsapi=1&html5=1",
-                'title': 'Spider-Man',
-                'thumbnail': ''
-            },
-            {
-                'url': "https://youtube.com/watch?v=IY5mBERhSDg",
-                'embed_url': "https://www.youtube.com/embed/IY5mBERhSDg?enablejsapi=1&html5=1",
-                'title': 'Car Fry 5',
-                'thumbnail': ''
-            }
-        ]
         if results is None:
             return render_template('error.html', msg=msg)
         results_range = range(len(results))
