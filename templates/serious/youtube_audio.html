@@ -1,9 +1,5 @@
 {% extends 'layout.html' %}
 
-<!-- NOTES
-    style="width: 0; height: 0; border: 0; border: none;"
--->
-
 {% block body %}
 	<p></p>
 	<h1>YouTube Audio</h1>
@@ -25,12 +21,20 @@
             {% for result, idx in zip(results, results_range) %}
                 <tr>
                     <td>
-                        <button type="button" id="button_play" class="btn" onclick='buttonPlayPress({{ idx }})'>
+                        <button type="button"
+                                id="button_play"
+                                name="button_play_{{ idx }}"
+                                class="btn"
+                                onclick='buttonPlayPress({{ idx }})'>
                             <i class="fa fa-play"></i>
                         </button>
                     </td>
                     <td>
-                        <button type="button" id="button_stop" class="btn" onclick='buttonStopPress()'>
+                        <button type="button"
+                                id="button_stop"
+                                name="button_stop_{{ idx }}"
+                                class="btn"
+                                onclick='buttonStopPress()'>
                             <i class="fa fa-stop"></i>
                         </button>
                     </td>
@@ -52,7 +56,7 @@
                         <iframe
                                 id="video_{{ idx }}"
                                 src="{{ result.embed_url }}"
-                                >
+                                style="width: 0; height: 0; border: 0; border: none;">
                         </iframe>
                     </td>
                 </tr>
@@ -61,40 +65,18 @@
     {% endif %}
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
-    var player;
+        var players;
 
-        // this function gets called when API is ready to use
+        function createPlayer(idx) {
+            return new YT.Player('video_' + idx);
+        }
+
         function onYouTubePlayerAPIReady() {
-          // create the global player from the specific iframe (#video)
-          player = new YT.Player('video_0', {
-            events: {
-              // call this function when player is ready to use
-              'onReady': onPlayerReady
-            }
-          });
+            players = [];
+            for (var idx = 0; idx < {{ results_range|length }}; idx++)
+                players.push(createPlayer(idx));
         }
 
-        function onPlayerReady(event) {
-
-          // bind events
-          var playButton = document.getElementById("button_play");
-          playButton.addEventListener("click", function() {
-            player.playVideo();
-          });
-
-          var pauseButton = document.getElementById("button_pause");
-          pauseButton.addEventListener("click", function() {
-            player.pauseVideo();
-          });
-
-          var stopButton = document.getElementById("button_stop");
-          stopButton.addEventListener("click", function() {
-            player.stopVideo();
-          });
-
-        }
-
-        // Inject YouTube API script
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/player_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -111,6 +93,7 @@
                                 .filter(function(d, i) { return i == idx; })
                                 .classed('btn-success', true);
                 button.select("i").attr('class', "fa fa-pause");
+                players[idx].playVideo();
             } else if (state == 'play') {
                 if (previous_video != idx) {
                     buttonStopPress();
@@ -119,8 +102,10 @@
                                     .filter(function(d, i) { return i == idx; })
                                     .classed('btn-success', true);
                     button.select("i").attr('class', "fa fa-pause");
+                    players[idx].playVideo();
                 } else {
                     state = 'pause';
+                    players[idx].pauseVideo();
                     d3.selectAll("#button_play i")
                         .filter(function(d, i) { return i == idx; })
                         .attr('class', "fa fa-play");
@@ -134,8 +119,10 @@
                                     .filter(function(d, i) { return i == idx; })
                                     .classed('btn-success', true);
                     button.select("i").attr('class', "fa fa-pause");
+                    players[idx].playVideo();
                 } else {
                     d3.selectAll("#button_play i").filter(function(d, i) { return i == idx; }).attr('class', "fa fa-play");
+                    players[idx].pauseVideo();
                 }
             } else if (state == 'pause') {
                 if (previous_video != idx) {
@@ -145,11 +132,13 @@
                         .filter(function(d, i) { return i == idx; })
                         .classed('btn-success', true);
                     button.select("i").attr('class', "fa fa-pause");
+                    players[idx].playVideo();
                 } else {
                     state = 'resume';
                     d3.select("#button_play i")
                         .filter(function(d, i) { return i == idx; })
                         .attr('class', "fa fa-pause");
+                    players[idx].playVideo();
                 }
             }
 
@@ -158,10 +147,16 @@
 
         function buttonStopPress() {
             state = 'stop';
+            stopAllVideos();
             var buttons = d3.selectAll("#button_play").classed('btn-success', false);
             buttons.select("i").attr('class', "fa fa-play");
             previous_video = '';
             console.log("button stop invoked.");
+        }
+
+        function stopAllVideos() {
+            for (var idx = 0; idx < {{ results_range|length }}; idx++)
+                players[idx].stopVideo();
         }
     </script>
 {% endblock %}
