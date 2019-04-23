@@ -311,13 +311,16 @@ def explosion_clip_meme_page():
 
 @app.route('/youtube_audio', methods=['GET', 'POST'])
 def youtube_audio_page():
-    results = None
+    results, msg = None, None
     query = None
     results_range = None
     if request.method == 'POST':
         query = request.form['query']
-        results = video_search_query(query)
+        results, msg = video_search_query(query)
+        if results is None:
+            return render_template('error.html', msg=msg)
         results_range = range(len(results))
+
     return render_template('serious/youtube_audio.html',
                            query=query,
                            results=results,
