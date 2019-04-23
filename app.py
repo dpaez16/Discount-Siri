@@ -16,6 +16,7 @@ from modules.deep_fry import gen_deep_fry
 from modules.alternating_emoji import gen_alternating_emoji
 from modules.spongebob_mock import gen_spongebob_mock
 from modules.explosion_meme import append_explosion_clip
+from modules.youtube_videos import video_search_query
 
 UPLOAD_FOLDER = os.getcwd()
 ALLOWED_EXTENSIONS = {
@@ -30,17 +31,17 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_image_file(file):
     return '.' in file \
-            and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS['IMAGES']
+           and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS['IMAGES']
 
 
 def allowed_audio_file(file):
     return '.' in file \
-            and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS['AUDIO']
+           and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS['AUDIO']
 
 
 def allowed_video_file(file):
     return '.' in file \
-            and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS['VIDEO']
+           and file.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS['VIDEO']
 
 
 @app.route("/")
@@ -306,6 +307,22 @@ def explosion_clip_meme_page():
             return render_template('error.html', msg=msg)
     else:
         return render_template('memes/explosion_clip.html')
+
+
+@app.route('/youtube_audio', methods=['GET', 'POST'])
+def youtube_audio_page():
+    results = None
+    query = None
+    results_range = None
+    if request.method == 'POST':
+        query = request.form['query']
+        results = video_search_query(query)
+        results_range = range(len(results))
+    return render_template('serious/youtube_audio.html',
+                           query=query,
+                           results=results,
+                           results_range=results_range,
+                           zip=zip)
 
 
 if __name__ == "__main__":
